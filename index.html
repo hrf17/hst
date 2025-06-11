@@ -1,103 +1,76 @@
 <!DOCTYPE html>
 <html lang="zh">
 <head>
-  <meta charset="UTF-8">
-  <title>给我的小猪</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>给我的小猪🐷</title>
   <style>
     body {
-      font-family: 'Arial', sans-serif;
+      font-family: "微软雅黑", sans-serif;
+      background-color: #fff0f5;
       text-align: center;
-      background: #fff0f5;
-      margin: 0;
-      padding: 0;
+      padding: 50px;
     }
-    #auth, #content {
+    #lockscreen {
       margin-top: 100px;
+    }
+    #maincontent {
+      display: none;
     }
     input {
       padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
       font-size: 16px;
+      margin-right: 10px;
     }
     button {
       padding: 10px 20px;
       font-size: 16px;
-      margin-left: 10px;
+      border: none;
+      border-radius: 8px;
+      background-color: #ff69b4;
+      color: white;
+      cursor: pointer;
     }
-    #error {
-      color: red;
-      margin-top: 10px;
-    }
-    #content {
-      display: none;
-    }
-    #content h1 {
-      color: #ff1493;
-      font-size: 32px;
-    }
-    #love-text {
-      font-size: 20px;
-      margin-top: 20px;
-      white-space: pre-wrap;
-    }
-    audio {
-      margin-top: 30px;
+    button:hover {
+      background-color: #ff1493;
     }
   </style>
 </head>
 <body>
-
-  <div id="auth">
-    <h2>为了确认你是我的小猪</h2>
-    <p>请在下方输入我们的暗号吧！</p>
-    <input type="text" id="codeInput" placeholder="请输入暗号">
-    <button onclick="checkCode()">确认</button>
-    <div id="error"></div>
+  <div id="lockscreen">
+    <h2>为了确认你是我的小猪🐷，请输入我们的暗号吧！</h2>
+    <input type="text" id="password" placeholder="输入暗号">
+    <button onclick="checkPassword()">进入</button>
   </div>
 
-  <div id="content">
-    <h1>🎉 欢迎回来，我的小猪！</h1>
-    <div id="love-text">
-      <!-- 你可以自己在这里写表白内容 -->
-      宝宝你可以在这里写任何你想说的话，支持换行～
-    </div>
+  <div id="maincontent">
+    <h1>❤️ 你就是我唯一 ❤️</h1>
+    <p>（此处你可以填写你想对她说的话）</p>
     <audio controls autoplay loop>
-      <source src="https://music.163.com/song/media/outer/url?id=1336857604.mp3" type="audio/mpeg">
-      你的浏览器不支持播放音乐。
+      <source src="唯一.mp3" type="audio/mpeg">
+      您的浏览器不支持音频播放。
     </audio>
   </div>
 
   <script>
-    // “蒜鸟”的 SHA-256 哈希（utf-8 编码）
-    const correctHash = "5e3e56b82d6ebdd9c113e26cf4df30b3b2b0d4f8c3772734a3d3f4a8cfd0d77d";
-    async function checkCode() {
-      const input = document.getElementById("codeInput").value.trim();
-      const error = document.getElementById("error");
-      error.textContent = "";
+    const correctHash = "5e3e56b82d6ebdd9c113e26cf4df30b3b2b0d4f8c3772734a3d3f4a8cfd0d77d"; // “蒜鸟”的 SHA-256
 
-      if (!input) {
-        error.textContent = "宝宝还记得我们的暗号嘛";
-        return;
-      }
-
-      const hash = await sha256(input);
-      if (hash === correctHash) {
-        document.getElementById("auth").style.display = "none";
-        document.getElementById("content").style.display = "block";
-      } else {
-        error.textContent = "❌ 不是我的小猪捏～";
-      }
-    }
-
-    // 计算 SHA-256 哈希
-    async function sha256(text) {
+    async function checkPassword() {
+      const text = document.getElementById("password").value.trim(); // 避免多余空格
       const encoder = new TextEncoder();
       const data = encoder.encode(text);
-      const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+      const hashBuffer = await crypto.subtle.digest("SHA-256", data);
       const hashArray = Array.from(new Uint8Array(hashBuffer));
       const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-      return hashHex;
+      if (hashHex === correctHash) {
+        document.getElementById("lockscreen").style.display = "none";
+        document.getElementById("maincontent").style.display = "block";
+      } else {
+        alert("暗号不对哦，小猪再想想捏~");
+      }
     }
   </script>
-
 </body>
 </html>
