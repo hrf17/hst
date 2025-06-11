@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>给我的小猪</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      text-align: center;
+      background: #fff0f5;
+      margin: 0;
+      padding: 0;
+    }
+    #auth, #content {
+      margin-top: 100px;
+    }
+    input {
+      padding: 10px;
+      font-size: 16px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      margin-left: 10px;
+    }
+    #error {
+      color: red;
+      margin-top: 10px;
+    }
+    #content {
+      display: none;
+    }
+    #content h1 {
+      color: #ff1493;
+      font-size: 32px;
+    }
+    #love-text {
+      font-size: 20px;
+      margin-top: 20px;
+      white-space: pre-wrap;
+    }
+    audio {
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="auth">
+    <h2>为了确认你是我的小猪</h2>
+    <p>请在下方输入我们的暗号吧！</p>
+    <input type="text" id="codeInput" placeholder="请输入暗号">
+    <button onclick="checkCode()">确认</button>
+    <div id="error"></div>
+  </div>
+
+  <div id="content">
+    <h1>🎉 欢迎回来，我的小猪！</h1>
+    <div id="love-text">
+      <!-- 你可以自己在这里写表白内容 -->
+      宝宝你可以在这里写任何你想说的话，支持换行～
+    </div>
+    <audio controls autoplay loop>
+      <source src="https://music.163.com/song/media/outer/url?id=1336857604.mp3" type="audio/mpeg">
+      你的浏览器不支持播放音乐。
+    </audio>
+  </div>
+
+  <script>
+    // “蒜鸟”的 SHA-256 哈希（utf-8 编码）
+    const correctHash = "5e3e56b82d6ebdd9c113e26cf4df30b3b2b0d4f8c3772734a3d3f4a8cfd0d77d";
+
+    async function checkCode() {
+      const input = document.getElementById("codeInput").value.trim();
+      const error = document.getElementById("error");
+      error.textContent = "";
+
+      if (!input) {
+        error.textContent = "宝宝还记得我们的暗号嘛";
+        return;
+      }
+
+      const hash = await sha256(input);
+      if (hash === correctHash) {
+        document.getElementById("auth").style.display = "none";
+        document.getElementById("content").style.display = "block";
+      } else {
+        error.textContent = "❌ 不是我的小猪捏～";
+      }
+    }
+
+    // 计算 SHA-256 哈希
+    async function sha256(text) {
+      const encoder = new TextEncoder();
+      const data = encoder.encode(text);
+      const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+      return hashHex;
+    }
+  </script>
+
+</body>
+</html>
