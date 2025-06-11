@@ -55,10 +55,11 @@
   </div>
 
   <script>
-    const correctHash = "5e3e56b82d6ebdd9c113e26cf4df30b3b2b0d4f8c3772734a3d3f4a8cfd0d77d"; // “蒜鸟”的 SHA-256
+    // “蒜鸟” 的正确 SHA-256 值（UTF-8 编码）
+    const correctHash = "9f5db19c9186b0fe0c64614ff5d1e9ae62c5c57959c9b2c0b7f7a41c01ce819b";
 
     async function checkPassword() {
-      const text = document.getElementById("password").value.trim(); // 避免多余空格
+      const text = document.getElementById("password").value.trim();
       const encoder = new TextEncoder();
       const data = encoder.encode(text);
       const hashBuffer = await crypto.subtle.digest("SHA-256", data);
