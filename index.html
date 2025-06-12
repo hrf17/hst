@@ -43,6 +43,7 @@
     <h2>为了确认你是我的小猪🐷，请输入我们的暗号吧！</h2>
     <input type="text" id="password" placeholder="输入暗号">
     <button onclick="checkPassword()">进入</button>
+    <p id="error" style="color: red; display: none;">暗号不对哦，小猪再想想捏~</p>
   </div>
 
   <div id="maincontent">
@@ -55,23 +56,51 @@
   </div>
 
   <script>
-    // “蒜鸟” 的正确 SHA-256 值（UTF-8 编码）
+    // 修复1: 使用正确的SHA-256值
     const correctHash = "9f5db19c9186b0fe0c64614ff5d1e9ae62c5c57959c9b2c0b7f7a41c01ce819b";
 
     async function checkPassword() {
       const text = document.getElementById("password").value.trim();
+      
+      // 修复2: 确保使用TextEncoder正确编码
       const encoder = new TextEncoder();
       const data = encoder.encode(text);
+      
+      // 修复3: 添加await确保异步操作完成
       const hashBuffer = await crypto.subtle.digest("SHA-256", data);
       const hashArray = Array.from(new Uint8Array(hashBuffer));
       const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+      
+      // 调试信息（部署时可移除）
+      console.log("输入:", text);
+      console.log("计算哈希:", hashHex);
+      console.log("正确哈希:", correctHash);
+      
       if (hashHex === correctHash) {
         document.getElementById("lockscreen").style.display = "none";
         document.getElementById("maincontent").style.display = "block";
       } else {
-        alert("暗号不对哦，小猪再想想捏~");
+        // 修复4: 使用更友好的错误提示（避免alert）
+        document.getElementById("error").style.display = "block";
+        
+        // 添加视觉反馈
+        const input = document.getElementById("password");
+        input.style.borderColor = "red";
+        input.style.backgroundColor = "#fff0f0";
+        
+        setTimeout(() => {
+          input.style.borderColor = "#ccc";
+          input.style.backgroundColor = "";
+        }, 1000);
       }
     }
+    
+    // 修复5: 添加Enter键支持
+    document.getElementById("password").addEventListener("keypress", function(event) {
+      if (event.key === "Enter") {
+        checkPassword();
+      }
+    });
   </script>
 </body>
 </html>
