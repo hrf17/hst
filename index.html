@@ -69,9 +69,13 @@ background-size: cover;
   <script>
     function checkPassword() {
       const pwd = document.getElementById("password").value.trim();
-      if (pwd === "蒜鸟") {
-        document.getElementById("lockscreen").style.display = "none";
-        document.getElementById("maincontent").style.display = "block";
+     if (password === "蒜鸟") {
+  document.getElementById("lockscreen").style.display = "none";
+  document.getElementById("maincontent").style.display = "block";
+  document.body.style.background = "url('your-image.jpg') no-repeat center center fixed";
+  document.body.style.backgroundSize = "cover";
+}
+
         startSakura();
 
         const music = document.getElementById("bgmusic");
