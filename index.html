@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>给我的小猪🐷</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sha256/0.9.0/sha256.min.js"></script>
   <style>
     body {
       font-family: "微软雅黑", sans-serif;
@@ -23,6 +24,7 @@
       border-radius: 8px;
       font-size: 16px;
       margin-right: 10px;
+      width: 200px;
     }
     button {
       padding: 10px 20px;
@@ -36,14 +38,19 @@
     button:hover {
       background-color: #ff1493;
     }
+    #error {
+      color: red;
+      margin-top: 10px;
+      display: none;
+    }
   </style>
 </head>
 <body>
   <div id="lockscreen">
     <h2>为了确认你是我的小猪🐷，请输入我们的暗号吧！</h2>
-    <input type="text" id="password" placeholder="输入暗号">
+    <input type="text" id="password" placeholder="输入暗号" autocomplete="off">
     <button onclick="checkPassword()">进入</button>
-    <p id="error" style="color: red; display: none;">暗号不对哦，小猪再想想捏~</p>
+    <p id="error">暗号不对哦，小猪再想想捏~</p>
   </div>
 
   <div id="maincontent">
@@ -56,31 +63,22 @@
   </div>
 
   <script>
-    // 修复1: 使用正确的SHA-256值
-    const correctHash = "9f5db19c9186b0fe0c64614ff5d1e9ae62c5c57959c9b2c0b7f7a41c01ce819b";
-
-    async function checkPassword() {
+    // 使用 js-sha256 库替代 crypto.subtle
+    function checkPassword() {
       const text = document.getElementById("password").value.trim();
+      const hash = sha256(text);
       
-      // 修复2: 确保使用TextEncoder正确编码
-      const encoder = new TextEncoder();
-      const data = encoder.encode(text);
+      // 正确的哈希值（对应"蒜鸟"）
+      const correctHash = "9f5db19c9186b0fe0c64614ff5d1e9ae62c5c57959c9b2c0b7f7a41c01ce819b";
       
-      // 修复3: 添加await确保异步操作完成
-      const hashBuffer = await crypto.subtle.digest("SHA-256", data);
-      const hashArray = Array.from(new Uint8Array(hashBuffer));
-      const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-      
-      // 调试信息（部署时可移除）
       console.log("输入:", text);
-      console.log("计算哈希:", hashHex);
+      console.log("计算哈希:", hash);
       console.log("正确哈希:", correctHash);
       
-      if (hashHex === correctHash) {
+      if (hash === correctHash) {
         document.getElementById("lockscreen").style.display = "none";
         document.getElementById("maincontent").style.display = "block";
       } else {
-        // 修复4: 使用更友好的错误提示（避免alert）
         document.getElementById("error").style.display = "block";
         
         // 添加视觉反馈
@@ -95,12 +93,17 @@
       }
     }
     
-    // 修复5: 添加Enter键支持
+    // 添加Enter键支持
     document.getElementById("password").addEventListener("keypress", function(event) {
       if (event.key === "Enter") {
         checkPassword();
       }
     });
+    
+    // 自动聚焦到输入框
+    window.onload = function() {
+      document.getElementById("password").focus();
+    };
   </script>
 </body>
 </html>
