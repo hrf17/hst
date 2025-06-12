@@ -10,6 +10,7 @@
       background-color: #fff0f5;
       text-align: center;
       padding: 50px;
+      overflow: hidden;
     }
     #lockscreen {
       margin-top: 100px;
@@ -23,7 +24,6 @@
       border-radius: 8px;
       font-size: 16px;
       margin-right: 10px;
-      width: 200px;
     }
     button {
       padding: 10px 20px;
@@ -37,39 +37,58 @@
     button:hover {
       background-color: #ff1493;
     }
-    #error {
-      color: red;
-      margin-top: 10px;
-      display: none;
+    .sakura {
+      position: fixed;
+      top: -50px;
+      z-index: 999;
+      pointer-events: none;
+      animation: fall linear infinite;
+    }
+
+    @keyframes fall {
+      0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(100vh) rotate(360deg);
+        opacity: 0;
+      }
     }
   </style>
 </head>
 <body>
   <div id="lockscreen">
     <h2>为了确认你是我的小猪🐷，请输入我们的暗号吧！</h2>
-    <input type="text" id="password" placeholder="输入暗号" autocomplete="off">
+    <input type="text" id="password" placeholder="输入暗号">
     <button onclick="checkPassword()">进入</button>
-    <p id="error">暗号不对哦，小猪再想想捏~</p>
+    <p id="error" style="color: red; display: none;">暗号不对哦，小猪再想想捏~</p>
   </div>
 
   <div id="maincontent">
-    <h1>致霍姝彤</h1>
+    <h1>❤️ 你就是我唯一 ❤️</h1>
     <p>（此处你可以填写你想对她说的话）</p>
     <audio controls autoplay loop>
-      <source src="唯一.mp3" type="audio/mpeg">
+      <source src="hst.mp3" type="audio/mpeg">
       您的浏览器不支持音频播放。
     </audio>
   </div>
 
   <script>
-    function checkPassword() {
-      const inputText = document.getElementById("password").value.trim();
-      const correctPassword = "蒜鸟";  // 这是明文密码
+    const correctHash = "9f5db19c9186b0fe0c64614ff5d1e9ae62c5c57959c9b2c0b7f7a41c01ce819b"; // “蒜鸟”
 
-      if (inputText === correctPassword) {
+    async function checkPassword() {
+      const text = document.getElementById("password").value.trim();
+      const encoder = new TextEncoder();
+      const data = encoder.encode(text);
+      const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+      
+      if (hashHex === correctHash) {
         document.getElementById("lockscreen").style.display = "none";
         document.getElementById("maincontent").style.display = "block";
-        document.getElementById("error").style.display = "none";
+        startSakura(); // 开启樱花
       } else {
         document.getElementById("error").style.display = "block";
         const input = document.getElementById("password");
@@ -82,17 +101,28 @@
       }
     }
 
-    // 回车键支持
     document.getElementById("password").addEventListener("keypress", function(event) {
       if (event.key === "Enter") {
         checkPassword();
       }
     });
 
-    // 自动聚焦
-    window.onload = function() {
-      document.getElementById("password").focus();
-    };
+    // 落樱特效函数
+    function startSakura() {
+      setInterval(() => {
+        const sakura = document.createElement("img");
+        sakura.src = "https://cdn.jsdelivr.net/gh/jirengu/images/sakura.png";
+        sakura.classList.add("sakura");
+        sakura.style.left = Math.random() * 100 + "vw";
+        sakura.style.width = (Math.random() * 20 + 10) + "px";
+        sakura.style.animationDuration = (Math.random() * 3 + 2) + "s";
+        document.body.appendChild(sakura);
+
+        setTimeout(() => {
+          sakura.remove();
+        }, 5000);
+      }, 300);
+    }
   </script>
 </body>
 </html>
