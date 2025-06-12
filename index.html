@@ -10,6 +10,7 @@
       background-color: #fff0f5;
       text-align: center;
       padding: 50px;
+      overflow: hidden;
     }
     #lockscreen {
       margin-top: 100px;
@@ -36,6 +37,14 @@
     button:hover {
       background-color: #ff1493;
     }
+
+    /* 樱花样式 */
+    .sakura {
+      position: fixed;
+      top: -50px;
+      pointer-events: none;
+      z-index: 9999;
+    }
   </style>
 </head>
 <body>
@@ -47,29 +56,25 @@
   </div>
 
   <div id="maincontent">
-      <audio controls autoplay loop>
+    <h1>致小猪</h1>
+    <p>（此处你可以填写你想对她说的话）</p>
+    <audio controls autoplay loop>
       <source src="hst.mp3" type="audio/mpeg">
       您的浏览器不支持音频播放。
     </audio>
   </div>
 
   <script>
-    const correctHash = "9f5db19c9186b0fe0c64614ff5d1e9ae62c5c57959c9b2c0b7f7a41c01ce819b"; // “蒜鸟”
+    function checkPassword() {
+      const input = document.getElementById("password");
+      const pwd = input.value.trim();
 
-    async function checkPassword() {
-      const text = document.getElementById("password").value.trim();
-      const encoder = new TextEncoder();
-      const data = encoder.encode(text);
-      const hashBuffer = await crypto.subtle.digest("SHA-256", data);
-      const hashArray = Array.from(new Uint8Array(hashBuffer));
-      const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-      
-      if (hashHex === correctHash) {
+      if (pwd === "蒜鸟") {
         document.getElementById("lockscreen").style.display = "none";
         document.getElementById("maincontent").style.display = "block";
+        startSakura();
       } else {
         document.getElementById("error").style.display = "block";
-        const input = document.getElementById("password");
         input.style.borderColor = "red";
         input.style.backgroundColor = "#fff0f0";
         setTimeout(() => {
@@ -79,11 +84,38 @@
       }
     }
 
+    // 添加 Enter 键支持
     document.getElementById("password").addEventListener("keypress", function(event) {
       if (event.key === "Enter") {
         checkPassword();
       }
     });
+
+    // 落樱特效
+    function startSakura() {
+      const colors = ["#fcefe8", "#ffc0cb", "#ffb6c1"];
+      setInterval(() => {
+        const sakura = document.createElement("div");
+        sakura.classList.add("sakura");
+        sakura.textContent = "🌸";
+        sakura.style.left = Math.random() * 100 + "vw";
+        sakura.style.fontSize = Math.random() * 24 + 12 + "px";
+        sakura.style.animation = `fall ${5 + Math.random() * 5}s linear`;
+        document.body.appendChild(sakura);
+        setTimeout(() => {
+          sakura.remove();
+        }, 10000);
+      }, 300);
+    }
   </script>
+
+  <style>
+    @keyframes fall {
+      to {
+        transform: translateY(100vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+  </style>
 </body>
 </html>
