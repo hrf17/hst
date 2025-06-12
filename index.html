@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>给我的小猪🐷</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sha256/0.9.0/sha256.min.js"></script>
   <style>
     body {
       font-family: "微软雅黑", sans-serif;
@@ -63,44 +62,41 @@
   </div>
 
   <script>
-    // 使用 js-sha256 库替代 crypto.subtle
     function checkPassword() {
-      const text = document.getElementById("password").value.trim();
-      const hash = sha256(text);
-      
-      // 正确的哈希值（对应"蒜鸟"）
-      const correctHash = "9f5db19c9186b0fe0c64614ff5d1e9ae62c5c57959c9b2c0b7f7a41c01ce819b";
-      
-      console.log("输入:", text);
-      console.log("计算哈希:", hash);
-      console.log("正确哈希:", correctHash);
-      
-      if (hash === correctHash) {
+      const inputText = document.getElementById("password").value.trim();
+      let encoded;
+      try {
+        encoded = btoa(inputText);  // 编码为 Base64
+      } catch (e) {
+        encoded = "";
+      }
+
+      const correctEncoded = "5ZWz5bGA"; // "蒜鸟" 的 Base64 编码
+
+      if (encoded === correctEncoded) {
         document.getElementById("lockscreen").style.display = "none";
         document.getElementById("maincontent").style.display = "block";
+        document.getElementById("error").style.display = "none";
       } else {
         document.getElementById("error").style.display = "block";
-        
-        // 添加视觉反馈
         const input = document.getElementById("password");
         input.style.borderColor = "red";
         input.style.backgroundColor = "#fff0f0";
-        
         setTimeout(() => {
           input.style.borderColor = "#ccc";
           input.style.backgroundColor = "";
         }, 1000);
       }
     }
-    
-    // 添加Enter键支持
+
+    // 回车键支持
     document.getElementById("password").addEventListener("keypress", function(event) {
       if (event.key === "Enter") {
         checkPassword();
       }
     });
-    
-    // 自动聚焦到输入框
+
+    // 自动聚焦
     window.onload = function() {
       document.getElementById("password").focus();
     };
