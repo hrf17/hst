@@ -64,16 +64,9 @@
   <script>
     function checkPassword() {
       const inputText = document.getElementById("password").value.trim();
-      let encoded;
-      try {
-        encoded = btoa(inputText);  // 编码为 Base64
-      } catch (e) {
-        encoded = "";
-      }
+      const correctPassword = "蒜鸟";  // 这是明文密码
 
-      const correctEncoded = "5ZWz5bGA"; // "蒜鸟" 的 Base64 编码
-
-      if (encoded === correctEncoded) {
+      if (inputText === correctPassword) {
         document.getElementById("lockscreen").style.display = "none";
         document.getElementById("maincontent").style.display = "block";
         document.getElementById("error").style.display = "none";
