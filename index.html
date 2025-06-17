@@ -45,11 +45,39 @@
       pointer-events: none;
       z-index: 9999;
     }
+
+    /* 标题样式：白描边红色字体 */
+    h1 {
+      color: #b22222;
+      font-weight: bold;
+      font-size: 2.5em;
+      text-shadow:
+        -1px -1px 0 #ffffff,
+        1px -1px 0 #ffffff,
+        -1px 1px 0 #ffffff,
+        1px 1px 0 #ffffff;
+    }
+
+    /* 正文样式：黑描边粉色字体 */
+    #maincontent p {
+      white-space: pre-line;
+      color: #ff69b4;
+      font-size: 1.2em;
+      line-height: 1.8;
+      margin: 30px auto;
+      max-width: 700px;
+      text-shadow:
+        -1px -1px 0 #000000,
+        1px -1px 0 #000000,
+        -1px 1px 0 #000000,
+        1px 1px 0 #000000;
+    }
   </style>
 </head>
 <body>
-    <!-- 半透明遮罩背景层 -->
+  <!-- 半透明遮罩背景层 -->
   <div style="position:fixed; top:0; left:0; width:100%; height:100%; background-color: rgba(255,255,255,0.3); z-index:-1;"></div>
+  
   <div id="lockscreen">
     <h2>为了确认是我的小猪🐷，请输入我们的暗号吧！</h2>
     <input type="text" id="password" placeholder="输入暗号">
@@ -58,8 +86,16 @@
   </div>
 
   <div id="maincontent">
-    <h1>致小猪</h1>
-    <p>喜欢你</p>
+    <h1>给我的小猪🐷</h1>
+    <p>宝宝曾经发过一条朋友圈，是一束小狗造型的花，来自小红书。后来那条朋友圈不知为何看不到了，宝宝还记得吗？  
+当时我联系了原博的店主，她是一位真心爱花的人，不愿让花待在狭小的保温箱里远途邮寄。我转而寻找杭州及周边能做小狗花束的花店，可惜水准都不太理想。  
+这件事便暂时搁置了。
+
+尔后突然想到永生花。它或许可以避免鲜花在路上凋谢的问题。  
+我始终不知道，当宝宝收到它时，它是否还保持着出发时的模样；不知道一路的颠簸，会不会让它有些走样。但我相信，它在出发时，一定生动鲜活，艳丽美好——  
+就像我们的感情，不知道未来会如何走向，但至少此刻，我们真心实意地相爱和依恋，毫无保留。我爱你，宝宝愿意从今天开始名正言顺地说出“我也爱你”吗？
+
+毕竟专业不对口水平也有限，从零开始学着做的，网站页面有些粗糙，希望宝宝不要真的以为我那天是在做学校作业，也希望宝宝不要嫌弃我的“作业”。</p>
   </div>
 
   <!-- 隐藏自动播放音频 -->
@@ -69,35 +105,34 @@
 
   <script>
     function checkPassword() {
-  const pwd = document.getElementById("password").value.trim();
-  if (pwd === "蒜鸟") {
-    document.getElementById("lockscreen").style.display = "none";
-    document.getElementById("maincontent").style.display = "block";
+      const pwd = document.getElementById("password").value.trim();
+      if (pwd === "蒜鸟") {
+        document.getElementById("lockscreen").style.display = "none";
+        document.getElementById("maincontent").style.display = "block";
 
-    // 改变背景图
-    document.body.style.background = "url('hst.jpg') no-repeat center center fixed";
-    document.body.style.backgroundSize = "60% auto";
+        // 改变背景图
+        document.body.style.background = "url('hst.jpg') no-repeat center center fixed";
+        document.body.style.backgroundSize = "60% auto";
 
-    // 启动落樱动画
-    startSakura();
+        // 启动落樱动画
+        startSakura();
 
-    // 播放音乐
-    const music = document.getElementById("bgmusic");
-    music.muted = false;
-    music.play();
-  } else {
-    document.getElementById("error").style.display = "block";
-    const input = document.getElementById("password");
-    input.style.borderColor = "red";
-    input.style.backgroundColor = "#fff0f0";
-    setTimeout(() => {
-      input.style.borderColor = "#ccc";
-      input.style.backgroundColor = "";
-    }, 1000);
-  }
-}
+        // 播放音乐
+        const music = document.getElementById("bgmusic");
+        music.muted = false;
+        music.play();
+      } else {
+        document.getElementById("error").style.display = "block";
+        const input = document.getElementById("password");
+        input.style.borderColor = "red";
+        input.style.backgroundColor = "#fff0f0";
+        setTimeout(() => {
+          input.style.borderColor = "#ccc";
+          input.style.backgroundColor = "";
+        }, 1000);
+      }
+    }
 
-    // 支持按 Enter 触发
     document.getElementById("password").addEventListener("keypress", function(event) {
       if (event.key === "Enter") {
         checkPassword();
