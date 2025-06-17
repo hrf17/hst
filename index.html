@@ -41,10 +41,11 @@
     }
 
     h1 {
-      font-size: 48px;
-      color: #b22222; /* 高贵红 */
-      text-shadow: 2px 2px 0 #ffffff, -2px -2px 0 #ffffff, 2px -2px 0 #ffffff, -2px 2px 0 #ffffff;
-    }
+  font-size: 48px;
+  color: #000000; /* 黑色文字 */
+  text-shadow: 2px 2px 0 #ffffff, -2px -2px 0 #ffffff,
+               2px -2px 0 #ffffff, -2px 2px 0 #ffffff; /* 白色描边 */
+}
 
     #loveletter {
       font-size: 20px;
@@ -69,14 +70,6 @@
 
   <div id="lockscreen">
     <h2>为了确认是我的小猪🐷，请输入我们的暗号吧！</h2>
-
-    <!-- 提示文字 -->
-    <div style="margin: 20px auto; max-width: 500px; background-color: rgba(255,255,255,0.6); border-radius: 10px; padding: 10px;">
-      <p style="color: #000000; font-size: 16px;">
-        手机端总是把我的背景图裁掉一半TvT，<br/>
-        条件允许的话宝宝能用电脑打开吗🥺
-      </p>
-    </div>
 
     <input type="text" id="password" placeholder="输入暗号">
     <button onclick="checkPassword()">进入</button>
